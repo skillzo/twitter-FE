@@ -8,6 +8,7 @@ import { useAuth } from "../../../store/authContext";
 
 export default function ProfileBottomSheet() {
   const { auth } = useAuth();
+
   return (
     <ScrollView className="">
       <View>
@@ -22,7 +23,7 @@ export default function ProfileBottomSheet() {
 
         <View className="px-3 ">
           <View className="flex flex-row justify-between items-start  ">
-            <View className="border-[3px] border-white bg-red-500 relative -top-7 rounded-full">
+            <View className="border-[3px] border-white bg-white relative -top-7 rounded-full">
               <PFP styleProps="w-[70px] h-[70px] " />
             </View>
 

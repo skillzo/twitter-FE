@@ -14,6 +14,7 @@ import { tweets } from "../../../assets/data/tweets";
 import { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import BottomSheet from "@gorhom/bottom-sheet";
 import ProfileBottomSheet from "../../components/user/ProfileBottomSheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Feeds({ navigation }) {
   //const bottomSheetModalRef = useRef(null);
@@ -24,6 +25,10 @@ export default function Feeds({ navigation }) {
     //bottomSheetModalRef.current?.present();
     bottomSheetRef.current?.expand();
   }, []);
+
+  const logout = async () => {
+    await AsyncStorage.removeItem("twitter-auth");
+  };
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -43,6 +48,7 @@ export default function Feeds({ navigation }) {
       }`}
     >
       <Button title="Open modal" onPress={handleOpen} />
+      <Button title="Logout" onPress={logout} />
 
       <BottomSheet
         ref={bottomSheetRef}

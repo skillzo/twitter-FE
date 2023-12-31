@@ -7,7 +7,6 @@ import RecentSearchHistory from "../../components/search/RecentSearchHistory";
 export default function Search({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  console.log(searchQuery);
   return (
     <View className="flex-1 bg-white pt-2 space-y-4">
       <View className="flex flex-row justify-between items-center px-2 pb-3">

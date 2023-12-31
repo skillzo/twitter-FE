@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { Alert } from "react-native";
 
 export const AuthContext = createContext();
 
@@ -10,7 +11,7 @@ export const AuthProvider = ({ children }) => {
         const init = await AsyncStorage.getItem("twitter-auth");
         setAuth(JSON.parse(init));
       } catch (err) {
-        console.log("error in async storage here", err);
+        Alert.alert(err);
       }
     };
     getItem();

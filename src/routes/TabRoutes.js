@@ -65,6 +65,7 @@ export default function TabRoutes() {
           ),
         }}
       />
+
       <Tab.Screen
         name="Messages"
         component={MessageStack}
