@@ -1,12 +1,18 @@
 import React from "react";
 import { Image } from "react-native";
+import { useAuth } from "../../../store/authContext";
 
 export default function PFP({ styleProps }) {
+  const { auth } = useAuth();
+
+  console.log("auth here", auth);
   return (
     <Image
       className={` w-[35px] h-[35px] object-cover rounded-full ${styleProps}`}
       source={{
-        uri: "https://wallpapers.com/images/hd/cool-profile-picture-87h46gcobjl5e4xu.jpg",
+        uri:
+          auth?.profile?.profile_picture ||
+          "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png",
       }}
     />
   );

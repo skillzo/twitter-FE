@@ -1,6 +1,13 @@
-import { View, Text, Button, Image, KeyboardAvoidingView } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  TextInput,
+} from "react-native";
 import React from "react";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
 
 export default function TweetSlug({ navigation }) {
   return (

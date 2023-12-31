@@ -8,7 +8,7 @@ export const tweets = [
       image:
         "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.png",
     },
-    createdAt: "2023-12-25T11:59:33Z",
+    createdAt: "2023-12-25T8:59:33Z",
     content: "Can you please check if the Subscribe button on Youtube works?",
     image:
       "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/thumbnail.png",
@@ -18,7 +18,7 @@ export const tweets = [
   },
   {
     id: "111111111",
-    createdAt: "2023-12-25T12:28:11Z",
+    createdAt: "2023-12-25T13:04:00Z",
     user: {
       id: "123456789",
       name: "Jeff B",

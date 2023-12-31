@@ -32,15 +32,15 @@ export default function TweetCard({
       future: "in %s",
       past: "%s ago",
       s: "%d s",
-      m: "a m",
+      m: "1m",
       mm: "%d m",
-      h: "an h",
+      h: "1h",
       hh: "%dh",
-      d: "a d",
+      d: "1d",
       dd: "%d d",
-      M: "a month",
+      M: "1 month",
       MM: "%d months",
-      y: "a year",
+      y: "1 year",
       yy: "%d years",
     },
   });
@@ -53,8 +53,11 @@ export default function TweetCard({
   return (
     <View className="flex flex-row gap-x-4 my-2 border-b last:border-none pb-4 border-gray-200">
       <Image
-        className="w-[45px] h-[45px] object-cover rounded-full"
-        src={image}
+        className="w-[45px] h-[45px] object-cover rounded-full "
+        src={
+          image ||
+          "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"
+        }
       />
 
       <View className="flex-1 space-y-1">
