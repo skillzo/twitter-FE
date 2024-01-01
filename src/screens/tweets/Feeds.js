@@ -6,15 +6,18 @@ import {
   Button,
   Text,
   StyleSheet,
+  ActivityIndicator,
+  FlatList,
 } from "react-native";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import TweetCard from "../../components/tweet/TweetCard";
-import { tweets } from "../../../assets/data/tweets";
 import { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import BottomSheet from "@gorhom/bottom-sheet";
 import ProfileBottomSheet from "../../components/user/ProfileBottomSheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useQuery } from "react-query";
+import { axiosInstance } from "../../../config/AxiosInstance";
 
 export default function Feeds({ navigation }) {
   //const bottomSheetModalRef = useRef(null);
@@ -41,6 +44,22 @@ export default function Feeds({ navigation }) {
     []
   );
 
+  const {
+    data: allTweets,
+    isLoading,
+    refetch,
+  } = useQuery("api/tweet/getAll", async () => {
+    return axiosInstance.get("api/tweet/getAll");
+  });
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-white">
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
   return (
     <View
       className={` bg-white flex-1 relative z-10 ${
@@ -62,22 +81,55 @@ export default function Feeds({ navigation }) {
         </View>
       </BottomSheet>
 
-      <ScrollView className="px-6 space-y-2 py-2 -z-20">
-        {tweets?.map((tweet) => (
+      <FlatList
+        className="px-3 space-y-2 py-2 -z-20"
+        data={allTweets?.data?.data}
+        ListEmptyComponent={<Text>No Feed 👍</Text>}
+        ListFooterComponent={
+          <Text className="text-center text-gray-500">
+            You are all caught 👍
+          </Text>
+        }
+        renderItem={({ item }) => {
+          return (
+            <TweetCard
+              key={item?._id}
+              id={item?._id}
+              keyExtractor={(item) => item._id}
+              name={item?.user?.name}
+              createdAt={item.createdAt}
+              verified={item?.user?.verified}
+              username={item?.user?.username}
+              pfp={item?.user?.image}
+              images={item?.image}
+              content={item.content}
+              no_of_comments={item.no_of_comments}
+              no_of_retweets={item.no_of_retweets}
+              no_of_likes={item.no_of_likes}
+            />
+          );
+        }}
+        refreshing={isLoading}
+        onRefresh={() => refetch()}
+      />
+
+      {/* <ScrollView className="px-6 space-y-2 py-2 -z-20">
+        {allTweets?.data?.data?.map((tweet) => (
           <TweetCard
-            key={tweet?.id}
+            key={tweet?._id}
             name={tweet?.user?.name}
             createdAt={tweet.createdAt}
             verified={tweet?.user?.verified}
             username={tweet?.user?.username}
-            image={tweet?.user?.image}
+            pfp={tweet?.user?.image}
+            images={tweet?.image}
             content={tweet.content}
             no_of_comments={tweet.no_of_comments}
             no_of_retweets={tweet.no_of_retweets}
             no_of_likes={tweet.no_of_likes}
           />
         ))}
-      </ScrollView>
+      </ScrollView> */}
 
       <Pressable
         onPress={() => navigation.navigate("Create-Tweet")}

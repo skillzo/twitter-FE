@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Image,
   Pressable,
   TextInput,
   TouchableOpacity,
@@ -10,10 +9,9 @@ import {
 import React, { useMemo, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { useMutation } from "react-query";
-import { base_url } from "../../../utils/variables";
-import axios from "axios";
 import { useAuth } from "../../../store/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { axiosInstance } from "../../../config/AxiosInstance";
 
 export default function SignUp({ navigation }) {
   const { setAuth } = useAuth();
@@ -21,29 +19,32 @@ export default function SignUp({ navigation }) {
     username: "",
     password: "",
     email: "",
-    display_name: "",
   });
 
   const { mutate } = useMutation(
-    async (data) => axios.post(`${base_url}/auth/login`, data),
+    async (data) => axiosInstance.post("/auth/signup", data),
     {
       onSuccess: async (response) => {
+        console.log("sign up res", response);
         await AsyncStorage.setItem(
           "twitter-auth",
           JSON.stringify(response?.data?.data)
         );
 
         setAuth(response?.data);
-        navigation.navigate("main");
+        // navigation.navigate("main");
       },
       onError: (err) => {
         Alert.alert("Error", err?.response?.data?.message);
       },
     }
   );
+
   const isDisabled = useMemo(
     () =>
-      credentials?.password?.length < 1 || credentials?.username?.length < 1,
+      credentials?.password?.length < 1 ||
+      credentials?.username?.length < 1 ||
+      credentials?.email?.length < 1,
     [credentials]
   );
 
@@ -54,7 +55,7 @@ export default function SignUp({ navigation }) {
 
         <View className=" w-[90%] mx-auto mt-8">
           <Text className="font-semibold text-[20px] text-center">
-            Log in to Twitter
+            Sign up to Twitter
           </Text>
 
           <View className="mt-4 space-y-6">
@@ -65,10 +66,28 @@ export default function SignUp({ navigation }) {
                   setCredentials({ ...credentials, username: text })
                 }
                 autoCapitalize="none"
-                placeholder="email or username"
+                placeholder="Username"
                 className="w-full bg-gray-100 rounded py-3 px-4"
               />
-              {/* <Text className="text-rose-600 ml-2">Enter your Username</Text> */}
+              {/* <Text className="text-rose-600 ml-2 text-xs mt-1">
+                Enter your Username
+              </Text> */}
+            </View>
+
+            <View>
+              <TextInput
+                value={credentials.email}
+                onChangeText={(text) =>
+                  setCredentials({ ...credentials, email: text })
+                }
+                autoCapitalize="none"
+                textContentType="emailAddress"
+                placeholder="Emial "
+                className="w-full bg-gray-100 rounded py-3 px-4"
+              />
+              {/* <Text className="text-rose-600 ml-2 text-xs">
+                Enter your Email
+              </Text> */}
             </View>
 
             <View>
@@ -79,10 +98,10 @@ export default function SignUp({ navigation }) {
                   setCredentials({ ...credentials, password: text })
                 }
                 autoCapitalize="none"
-                placeholder="emial or username"
+                placeholder="Password"
                 className="w-full bg-gray-100 rounded py-3 px-4"
               />
-              {/* <Text className="text-rose-600 ml-2">Enter your Username</Text> */}
+              {/* <Text className="text-rose-600 ml-2">Enter your Password</Text> */}
             </View>
           </View>
         </View>
@@ -99,14 +118,18 @@ export default function SignUp({ navigation }) {
             }`}
             disabled={isDisabled}
           >
-            <Text className="text-white text-center font-medium"> Log in</Text>
+            <Text className="text-white text-center font-medium"> Sign Up</Text>
           </TouchableOpacity>
 
-          <Pressable
-          //  onPress={() => getItem()}
-          >
-            <Text className="text-center font-medium">Sign Up</Text>
-          </Pressable>
+          <View className="flex flex-row justify-center item-center gap-x-2  ">
+            <Text className="  text-gray-500 tex">
+              Already have an account?
+            </Text>
+
+            <Pressable onPress={() => navigation.navigate("login")}>
+              <Text className="  font-medium text-m-blue">Sign In</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </View>

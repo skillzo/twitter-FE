@@ -5,17 +5,20 @@ import IconButton from "../buttons/IconButton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
+import ImageGrid from "../ImageGrid";
 
 export default function TweetCard({
+  id,
   name,
   createdAt,
   username,
   content,
-  image,
+  pfp,
   no_of_comments,
   no_of_likes,
   no_of_retweets,
   verified,
+  images,
 }) {
   let now = dayjs();
   const navigate = useNavigation();
@@ -55,15 +58,15 @@ export default function TweetCard({
       <Image
         className="w-[45px] h-[45px] object-cover rounded-full "
         src={
-          image ||
+          pfp ||
           "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"
         }
       />
 
       <View className="flex-1 space-y-1">
         <Pressable
-          className="space-y-1"
-          onPress={() => navigate.push("Tweet-Slug")}
+          className={`space-y-1 ${images?.length > 0 ? "mb-2" : ""} `}
+          onPress={() => navigate.push("Tweet-Slug", { tweet_id: id })}
         >
           {/* <Text className="text-gray-500 font-medium text-[12px]">
             Zack John liked
@@ -91,6 +94,10 @@ export default function TweetCard({
 
           <Text className="">{content}</Text>
         </Pressable>
+
+        <View className="mb-2">
+          {images?.length > 0 && <ImageGrid images={images} />}
+        </View>
 
         <View className="flex flex-row  justify-between items-center w-[70%]">
           <IconButton name="comment" number={no_of_comments} />

@@ -6,14 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useMemo, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { useMutation } from "react-query";
-import { base_url } from "../../../utils/variables";
-import axios from "axios";
 import { useAuth } from "../../../store/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { axiosInstance } from "../../../config/AxiosInstance";
 
 export default function Login({ navigation }) {
   const { setAuth } = useAuth();
@@ -23,7 +24,7 @@ export default function Login({ navigation }) {
   });
 
   const { mutate } = useMutation(
-    async (data) => axios.post(`${base_url}/auth/login`, data),
+    async (data) => axiosInstance.post("/auth/login", data),
     {
       onSuccess: async (response) => {
         await AsyncStorage.setItem(
@@ -32,9 +33,10 @@ export default function Login({ navigation }) {
         );
 
         setAuth(response?.data);
-        navigation.navigate("main");
+        // navigation.navigate("main");
       },
       onError: (err) => {
+        console.log("login error", err);
         Alert.alert("Error", err?.response?.data?.message);
       },
     }
@@ -46,7 +48,11 @@ export default function Login({ navigation }) {
   );
 
   return (
-    <View className="bg-white flex-1">
+    <KeyboardAvoidingView
+      className="bg-white flex-1"
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+    >
       <View className="pt-[30%]  flex justify-center items-center ">
         <AntDesign name="twitter" size={40} color="#4C9EEB" />
 
@@ -63,7 +69,8 @@ export default function Login({ navigation }) {
                   setCredentials({ ...credentials, username: text })
                 }
                 autoCapitalize="none"
-                placeholder="email or username"
+                autoCorrect={false}
+                placeholder="username"
                 className="w-full bg-gray-100 rounded py-3 px-4"
               />
               {/* <Text className="text-rose-600 ml-2">Enter your Username</Text> */}
@@ -77,7 +84,7 @@ export default function Login({ navigation }) {
                   setCredentials({ ...credentials, password: text })
                 }
                 autoCapitalize="none"
-                placeholder="emial or username"
+                placeholder="Password"
                 className="w-full bg-gray-100 rounded py-3 px-4"
               />
               {/* <Text className="text-rose-600 ml-2">Enter your Username</Text> */}
@@ -100,13 +107,15 @@ export default function Login({ navigation }) {
             <Text className="text-white text-center font-medium"> Log in</Text>
           </TouchableOpacity>
 
-          <Pressable
-          //  onPress={() => getItem()}
-          >
-            <Text className="text-center font-medium">Sign Up</Text>
-          </Pressable>
+          <View className="flex flex-row justify-center item-center gap-x-2  ">
+            <Text className="  text-gray-500 tex">Don't have an account?</Text>
+
+            <Pressable onPress={() => navigation.navigate("sign-up")}>
+              <Text className="  font-medium text-m-blue">Sign Up</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
