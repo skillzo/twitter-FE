@@ -2,12 +2,13 @@ import { useQuery } from "react-query";
 import { axiosInstance } from "../../config/AxiosInstance";
 
 export const useTweet = (id) => {
-  const { data: tweetById, isLoading: tweetByIdLoading } = useQuery(
-    "/api/tweet/getById",
-    async () => {
-      return axiosInstance.get(`/api/tweet/getById/${id}`);
-    }
-  );
+  const {
+    data: tweetById,
+    isLoading: tweetByIdLoading,
+    refetch: refetchById,
+  } = useQuery("/api/tweet/getById", async () => {
+    return axiosInstance.get(`/api/tweet/getById/${id}`);
+  });
 
   const {
     data: allTweets,
@@ -20,6 +21,7 @@ export const useTweet = (id) => {
   return {
     tweetById,
     tweetByIdLoading,
+    refetchById,
 
     allTweets,
     allTweetsLoading,

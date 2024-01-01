@@ -48,21 +48,8 @@ export const TweetStackRoute = () => {
         name="Create-Tweet"
         component={CreateTweet}
         options={{
-          headerShown: true,
+          headerShown: false,
           headerTitle: "",
-          headerLeft: () => (
-            <Pressable onPress={() => navigate.goBack()} className="ml-4">
-              <Text className="text-[16px]">Cancel</Text>
-            </Pressable>
-          ),
-          headerRight: () => (
-            <TouchableOpacity
-              // onPress={() => navigate.goBack()}
-              className="bg-[#4C9EEB] px-4 py-2 rounded-full mr-4"
-            >
-              <Text className="text-white">Post</Text>
-            </TouchableOpacity>
-          ),
         }}
       />
     </Stack.Navigator>
