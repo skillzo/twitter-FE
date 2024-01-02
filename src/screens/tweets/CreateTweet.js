@@ -6,12 +6,10 @@ import {
   Pressable,
   TouchableOpacity,
   Alert,
-  Button,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { axiosInstance } from "../../../config/AxiosInstance";
-import { useAuth } from "../../../store/authContext";
 import { useTweet } from "../../hooks/useTweet";
 
 export default function CreateTweet({ navigation }) {
@@ -26,7 +24,6 @@ export default function CreateTweet({ navigation }) {
   }, [navigation]);
 
   const [tweet, setTweet] = useState("");
-  const { auth } = useAuth();
   const { refetchAllTweets } = useTweet();
 
   const { mutate, isLoading } = useMutation(
@@ -39,7 +36,7 @@ export default function CreateTweet({ navigation }) {
         refetchAllTweets();
       },
       onError: (error) => {
-        Alert.prompt(error?.response?.data?.message);
+        Alert.alert(error?.response?.data?.message);
       },
     }
   );
@@ -51,7 +48,7 @@ export default function CreateTweet({ navigation }) {
         </Pressable>
 
         <TouchableOpacity
-          onPress={() => mutate({ content: tweet, user: auth?.id })}
+          onPress={() => mutate({ content: tweet })}
           className="bg-[#4C9EEB] px-4 py-2 rounded-full "
         >
           <Text className="text-white">Post</Text>
