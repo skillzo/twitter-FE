@@ -25,7 +25,6 @@ export default function SignUp({ navigation }) {
     async (data) => axiosInstance.post("/auth/signup", data),
     {
       onSuccess: async (response) => {
-        console.log("sign up res", response);
         await AsyncStorage.setItem(
           "twitter-auth",
           JSON.stringify(response?.data?.data)

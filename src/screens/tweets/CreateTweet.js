@@ -26,7 +26,7 @@ export default function CreateTweet({ navigation }) {
   const [tweet, setTweet] = useState("");
   const { refetchAllTweets } = useTweet();
 
-  const { mutate, isLoading } = useMutation(
+  const { mutate } = useMutation(
     async (data) => {
       return axiosInstance.post("/api/tweet/create", data);
     },

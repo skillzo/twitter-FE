@@ -44,11 +44,11 @@ export default function TweetSlug({ route }) {
   );
 
   return (
-    <View className="flex-1  bg-white pb-5 px-4 pt-3   ">
+    <View className="flex-1  bg-white pb-5 px-4 pt-3">
       <FlatList
         data={tweetByIdData?.comments}
-        ListHeaderComponent={
-          <View className="mb-5 flex-1">
+        ListFooterComponent={
+          <View className="mb-5 ">
             <View className=" ">
               <View className=" space-y-6">
                 <View className="flex flex-row items-center gap-x-2">
@@ -128,7 +128,7 @@ export default function TweetSlug({ route }) {
             </View>
           </View>
         }
-        // inverted
+        inverted
         showsVerticalScrollIndicator={false}
         refreshing={tweetByIdLoading}
         keyExtractor={(item) => item._id}

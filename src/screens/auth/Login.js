@@ -36,7 +36,6 @@ export default function Login({ navigation }) {
         // navigation.navigate("main");
       },
       onError: (err) => {
-        console.log("login error", err);
         Alert.alert("Error", err?.response?.data?.message);
       },
     }

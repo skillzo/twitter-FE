@@ -18,11 +18,13 @@ import ProfileBottomSheet from "../../components/user/ProfileBottomSheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "react-query";
 import { axiosInstance } from "../../../config/AxiosInstance";
+import { useAuth } from "../../../store/authContext";
 
 export default function Feeds({ navigation }) {
   //const bottomSheetModalRef = useRef(null);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["25%", "50%", "75%", "95%"], []);
+  const { auth } = useAuth();
 
   const handleOpen = useCallback(() => {
     //bottomSheetModalRef.current?.present();
@@ -31,6 +33,7 @@ export default function Feeds({ navigation }) {
 
   const logout = async () => {
     await AsyncStorage.removeItem("twitter-auth");
+    navigation.navigate("login");
   };
 
   const renderBackdrop = useCallback(
@@ -66,8 +69,8 @@ export default function Feeds({ navigation }) {
         Platform.OS === "andriod" ? "pt-4" : ""
       }`}
     >
-      <Button title="Open modal" onPress={handleOpen} />
-      <Button title="Logout" onPress={logout} />
+      {/* <Button title="Open modal" onPress={handleOpen} />
+      <Button title="Logout" onPress={logout} /> */}
 
       <BottomSheet
         ref={bottomSheetRef}
@@ -100,7 +103,7 @@ export default function Feeds({ navigation }) {
               createdAt={item.createdAt}
               verified={item?.user?.verified}
               username={item?.user?.username}
-              pfp={item?.user?.image}
+              pfp={item?.user?.profile?.profile_picture}
               images={item?.image}
               content={item.content}
               no_of_comments={item.no_of_comments}
