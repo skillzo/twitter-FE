@@ -17,6 +17,7 @@ import ImageGrid from "../../components/ImageGrid";
 import { uploadImageToCloudinary } from "../../../utils/uploadToCloudinary";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { useAuth } from "../../../store/authContext";
 
 export default function CreateTweet({ navigation }) {
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function CreateTweet({ navigation }) {
         ?.setOptions({ tabBarStyle: undefined, tabBarVisible: undefined });
   }, [navigation]);
 
+  const { auth } = useAuth();
   const [tweet, setTweet] = useState("");
   const { refetchAllTweets } = useTweet();
   const [uploadedImage, setUploadedImage] = useState();
@@ -128,9 +130,10 @@ export default function CreateTweet({ navigation }) {
             <View className="flex flex-row gap-x-2 ">
               <Image
                 className="w-[45px] h-[45px] object-cover rounded-full"
-                source={{
-                  uri: "https://wallpapers.com/images/hd/cool-profile-picture-87h46gcobjl5e4xu.jpg",
-                }}
+                src={
+                  auth?.profile?.profile_picture ||
+                  "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"
+                }
               />
 
               <TextInput
@@ -172,65 +175,3 @@ export default function CreateTweet({ navigation }) {
     </ScrollView>
   );
 }
-
-// let res = {
-//   assets: [
-//     {
-//       assetId: "65206C1B-7BF2-40BE-9620-7AC3DCCABB46/L0/001",
-//       base64: null,
-//       duration: null,
-//       exif: null,
-//       fileName: "IMG_0010.jpg",
-//       fileSize: 23609,
-//       height: 438,
-//       type: "image",
-//       uri: "file:///Users/macbookprom1/Library/Developer/CoreSimulator/Devices/A58F1BAF-B936-4961-8A1D-7DDD796C8367/data/Containers/Data/Application/1277DDAB-56A3-483B-B888-1EF9B092C1B6/Library/Caches/ExponentExperienceData/%2540anonymous%252Ftwitter-frontend-6b3f511d-d9b5-4ce1-845c-92c818f366ea/ImagePicker/4175E287-62C4-4BCE-8CFB-AA265EF9F4F8.jpg",
-//       width: 701,
-//     },
-//     {
-//       assetId: "D84CE3DF-3266-4EB1-B307-3A2B7097E927/L0/001",
-//       base64: null,
-//       duration: null,
-//       exif: null,
-//       fileName: "IMG_0009.jpg",
-//       fileSize: 24004,
-//       height: 480,
-//       type: "image",
-//       uri: "file:///Users/macbookprom1/Library/Developer/CoreSimulator/Devices/A58F1BAF-B936-4961-8A1D-7DDD796C8367/data/Containers/Data/Application/1277DDAB-56A3-483B-B888-1EF9B092C1B6/Library/Caches/ExponentExperienceData/%2540anonymous%252Ftwitter-frontend-6b3f511d-d9b5-4ce1-845c-92c818f366ea/ImagePicker/B78C8723-5DA4-45AD-BB8F-2C947D12E2F8.jpg",
-//       width: 640,
-//     },
-//     {
-//       assetId: "6A5EC688-9979-444F-9904-3646F3E21AA6/L0/001",
-//       base64: null,
-//       duration: null,
-//       exif: null,
-//       fileName: "IMG_0008.jpg",
-//       fileSize: 26774,
-//       height: 640,
-//       type: "image",
-//       uri: "file:///Users/macbookprom1/Library/Developer/CoreSimulator/Devices/A58F1BAF-B936-4961-8A1D-7DDD796C8367/data/Containers/Data/Application/1277DDAB-56A3-483B-B888-1EF9B092C1B6/Library/Caches/ExponentExperienceData/%2540anonymous%252Ftwitter-frontend-6b3f511d-d9b5-4ce1-845c-92c818f366ea/ImagePicker/44FF91A0-DD34-4B6E-B228-D0906C3254D7.jpg",
-//       width: 480,
-//     },
-//     {
-//       assetId: "869EF714-DE38-4223-B200-2DEB9457F7A6/L0/001",
-//       base64: null,
-//       duration: null,
-//       exif: null,
-//       fileName: "IMG_0007.jpg",
-//       fileSize: 22020,
-//       height: 480,
-//       type: "image",
-//       uri: "file:///Users/macbookprom1/Library/Developer/CoreSimulator/Devices/A58F1BAF-B936-4961-8A1D-7DDD796C8367/data/Containers/Data/Application/1277DDAB-56A3-483B-B888-1EF9B092C1B6/Library/Caches/ExponentExperienceData/%2540anonymous%252Ftwitter-frontend-6b3f511d-d9b5-4ce1-845c-92c818f366ea/ImagePicker/1103A052-C38F-4DA0-921E-59A386FB7FAD.jpg",
-//       width: 640,
-//     },
-//   ],
-//   canceled: false,
-//   cancelled: false,
-// };
-
-// [
-//   "file:///Users/macbookprom1/Library/Developer/CoreSimulator/Devices/A58F1BAF-B936-4961-8A1D-7DDD796C8367/data/Containers/Data/Application/1277DDAB-56A3-483B-B888-1EF9B092C1B6/Library/Caches/ExponentExperienceData/%2540anonymous%252Ftwitter-frontend-6b3f511d-d9b5-4ce1-845c-92c818f366ea/ImagePicker/18C38454-E354-4436-87D4-A8C985A162BA.jpg",
-//   "file:///Users/macbookprom1/Library/Developer/CoreSimulator/Devices/A58F1BAF-B936-4961-8A1D-7DDD796C8367/data/Containers/Data/Application/1277DDAB-56A3-483B-B888-1EF9B092C1B6/Library/Caches/ExponentExperienceData/%2540anonymous%252Ftwitter-frontend-6b3f511d-d9b5-4ce1-845c-92c818f366ea/ImagePicker/18C38454-E354-4436-87D4-A8C985A162BA.jpg",
-//   "file:///Users/macbookprom1/Library/Developer/CoreSimulator/Devices/A58F1BAF-B936-4961-8A1D-7DDD796C8367/data/Containers/Data/Application/1277DDAB-56A3-483B-B888-1EF9B092C1B6/Library/Caches/ExponentExperienceData/%2540anonymous%252Ftwitter-frontend-6b3f511d-d9b5-4ce1-845c-92c818f366ea/ImagePicker/18C38454-E354-4436-87D4-A8C985A162BA.jpg",
-//   "file:///Users/macbookprom1/Library/Developer/CoreSimulator/Devices/A58F1BAF-B936-4961-8A1D-7DDD796C8367/data/Containers/Data/Application/1277DDAB-56A3-483B-B888-1EF9B092C1B6/Library/Caches/ExponentExperienceData/%2540anonymous%252Ftwitter-frontend-6b3f511d-d9b5-4ce1-845c-92c818f366ea/ImagePicker/18C38454-E354-4436-87D4-A8C985A162BA.jpg",
-// ];
