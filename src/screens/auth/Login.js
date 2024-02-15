@@ -24,7 +24,8 @@ export default function Login({ navigation }) {
   });
 
   const { mutate } = useMutation(
-    async (data) => axiosInstance.post("/auth/login", data),
+    async (data) => await axiosInstance.post("/auth/login", data),
+
     {
       onSuccess: async (response) => {
         await AsyncStorage.setItem(
@@ -37,6 +38,7 @@ export default function Login({ navigation }) {
       },
       onError: (err) => {
         Alert.alert("Error", err?.response?.data?.message);
+        console.log("login error", err);
       },
     }
   );
