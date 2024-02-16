@@ -17,8 +17,9 @@ import { useAuth } from "../../../../store/authContext";
 import { TextInput } from "react-native-gesture-handler";
 import { useMutation, useQuery } from "react-query";
 import { axiosInstance } from "../../../../config/AxiosInstance";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-export default function UserConversation({ navigation }) {
+export default function UserConversation({ navigation, route }) {
   useEffect(() => {
     navigation.getParent()?.setOptions({ headerShown: false });
     return () => navigation.getParent()?.setOptions({ headerShown: undefined });
@@ -27,11 +28,13 @@ export default function UserConversation({ navigation }) {
   const socket = useRef();
   const scrollViewRef = useRef();
   const { auth } = useAuth();
-  const [refreshWs, setRefreshWs] = useState(false);
   const [socketTyping, setSocketTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [userMessage, setUserMessage] = useState("");
   const [liveMessages, setLiveMessages] = useState([]);
+
+  // conversation
+  const { conversationId, name, profilePicture } = route.params;
 
   useEffect(() => {
     socket.current = io("http://localhost:80/");
@@ -47,17 +50,17 @@ export default function UserConversation({ navigation }) {
     return () => {
       socket.current.disconnect();
     };
-  }, [refreshWs, socket.current]);
+  }, [socket.current]);
 
   useEffect(() => {
     socket.current.emit("isTyping", { isTyping });
   }, [userMessage]);
 
-  // api calls
+  // get all meesages
   const { data: message, refetch } = useQuery(
     "/api/message",
     async () => {
-      return axiosInstance.get("/api/message/65b6a173d68bbca5d5261aa0");
+      return axiosInstance.get(`/api/message/${conversationId}`);
     },
     {
       onSuccess: (res) => {
@@ -66,6 +69,7 @@ export default function UserConversation({ navigation }) {
     }
   );
 
+  // send a message
   const { mutate } = useMutation(
     (data) => {
       axiosInstance.post("/api/message/create", data);
@@ -80,96 +84,96 @@ export default function UserConversation({ navigation }) {
   const sendMessage = () => {
     if (userMessage === "") return false;
     mutate({
-      conversationId: "65b6a173d68bbca5d5261aa0",
+      conversationId: conversationId,
       sender: auth?.id,
       text: userMessage,
     });
     socket.current.emit("setMessage", {
-      conversationId: "65b6a173d68bbca5d5261aa0",
+      conversationId: conversationId,
       sender: auth?.id,
       text: userMessage,
     });
   };
-  const keyboardVerticalOffset = Platform.OS === "ios" ? 40 : 0;
-  return (
-    <View className="flex-1 bg-white">
-      <View className="pb-2 border-b border-gray-300">
-        <View className="flex flex-row justify-between items-center px-3 pb-2 ">
-          <Pressable
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <Ionicons name="chevron-back" size={24} color="black" />
-          </Pressable>
 
-          <View className="flex items-center">
-            <Image
-              className="w-[30px] h-[30px] object-cover rounded-full"
-              source={{
-                uri: "https://wallpapers.com/images/hd/cool-profile-picture-87h46gcobjl5e4xu.jpg",
+  return (
+    <KeyboardAwareScrollView>
+      <View className="flex-1 bg-white">
+        <View className="pb-2 border-b border-gray-300">
+          <View className="flex flex-row justify-between items-center px-3 pb-2 ">
+            <Pressable
+              onPress={() => {
+                navigation.goBack();
               }}
-            />
+            >
+              <Ionicons name="chevron-back" size={24} color="black" />
+            </Pressable>
+
+            <View className="flex items-center">
+              <Image
+                className="w-[40px] h-[40px] object-cover rounded-full"
+                src={
+                  profilePicture ||
+                  "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"
+                }
+              />
+            </View>
+
+            <Pressable>
+              <Ionicons name="settings-outline" size={24} color="black" />
+            </Pressable>
           </View>
 
-          <Pressable>
-            <Ionicons name="settings-outline" size={24} color="black" />
-          </Pressable>
+          <Text className="font-[700] text-sm] mt-[1px] text-center">
+            {name}
+          </Text>
         </View>
 
-        <Text className="font-[700] text-sm] mt-[1px] text-center">
-          AlwaysAngry
-        </Text>
-      </View>
-
-      {/* <KeyboardAvoidingView
-        behavior="position"
-        // className="flex-1 bg-white"
-        keyboardVerticalOffset={keyboardVerticalOffset}
-      > */}
-      <ScrollView
-        ref={scrollViewRef}
-        onContentSizeChange={() =>
-          scrollViewRef.current.scrollToEnd({ animated: true })
-        }
-        className="px-4 py-[20em] "
-      >
-        {liveMessages?.map((msg) => {
-          return (
-            <MessageText
-              key={msg._id}
-              text={msg.text}
-              user={auth?.id === msg.sender}
-            />
-          );
-        })}
-
-        {socketTyping && (
-          <Image
-            className="h-[40px] w-[70px] object-cover"
-            source={require("../../../../assets/images/typing.gif")}
-          />
-        )}
-      </ScrollView>
-
-      <View className="flex flex-row border-t border-slate-300 bg-gray-50">
-        <TextInput
-          className="w-[80%]  py-2 px-4"
-          autoFocus
-          placeholder="Send message"
-          onChangeText={(text) => {
-            setUserMessage(text);
-            text.length > 1 ? setIsTyping(true) : setIsTyping(false);
-          }}
-        />
-        <TouchableOpacity
-          onPress={() => sendMessage()}
-          className="bg-m-blue px-6 py-3 rounded-lg flex items-center justify-center"
+        <ScrollView
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({ animated: true })
+          }
+          className="px-4 py-[20em] "
         >
-          <Text className="text-white">Send</Text>
-        </TouchableOpacity>
+          {liveMessages?.map((msg) => {
+            return (
+              <MessageText
+                key={msg._id}
+                text={msg.text}
+                user={auth?.id === msg.sender}
+              />
+            );
+          })}
+
+          {socketTyping && (
+            <Image
+              className="h-[40px] w-[70px] object-cover"
+              source={require("../../../../assets/images/typing.gif")}
+            />
+          )}
+        </ScrollView>
+
+        <View className="flex flex-row border-t border-slate-300 bg-gray-50">
+          <TextInput
+            className="w-[80%]  py-2 px-4"
+            autoFocus
+            placeholder="Send message"
+            onChangeText={(text) => {
+              setUserMessage(text);
+              text.length > 1 ? setIsTyping(true) : setIsTyping(false);
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => sendMessage()}
+            className={`bg-m-blue px-6 py-3 rounded-lg flex items-center justify-center ${
+              userMessage.length < 1 ? "opacity-40" : ""
+            }`}
+            disabled={userMessage.length < 1}
+          >
+            <Text className="text-white">Send</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      {/* </KeyboardAvoidingView> */}
-    </View>
+    </KeyboardAwareScrollView>
   );
 }

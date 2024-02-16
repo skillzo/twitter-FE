@@ -1,23 +1,37 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Image } from "react-native";
 import React from "react";
 import PFP from "../user/PFP";
 import { useNavigation } from "@react-navigation/native";
 
-export default function MessageCard() {
-  const navigate = useNavigation();
+export default function MessageCard({
+  username,
+  name,
+  profilePicture,
+  conversationId,
+}) {
+  const navigation = useNavigation();
   return (
     <Pressable
-      onPress={() => navigate.navigate("Message-Slug")}
+      onPress={() =>
+        navigation.navigate("Message-Slug", {
+          conversationId,
+          name,
+          profilePicture,
+        })
+      }
       className="flex flex-row  gap-x-2 border-b border-gray-200 pb-3 my-2  "
     >
-      <PFP styleProps="w-[50px] h-[50px]" />
+      <Image
+        className={` w-[50px] h-[50px] object-cover rounded-full`}
+        src={profilePicture}
+      />
 
       <View className="flex-1  ">
         <View className="flex flex-row justify-between">
           <View className="">
             <Text className="font-semibold">
-              AzizDjan{" "}
-              <Text className="text-gray-400 text-xs"> @A_AzizDjan </Text>{" "}
+              {name}{" "}
+              <Text className="text-gray-400 text-xs"> @{username} </Text>{" "}
             </Text>
           </View>
 

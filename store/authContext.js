@@ -32,3 +32,23 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   return useContext(AuthContext);
 };
+
+// const schema = {
+//   email: "skillzo3@gmail.com",
+//   followers: [],
+//   followings: [],
+//   id: "6591e43d4dda4ee29cf732fd",
+//   profile: {
+//     bio: "",
+//     cover_picture: "",
+//     dob: "",
+//     is_verified: false,
+//     joined_date: "2023-12-31T21:59:25.908Z",
+//     location: "",
+//     name: "",
+//     profile_picture: "",
+//   },
+//   token:
+//     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OTFlNDNkNGRkYTRlZTI5Y2Y3MzJmZCIsInVzZXJuYW1lIjoic2tpbGx6bzMiLCJuYW1lIjoiIiwicHJvZmlsZV9waWN0dXJlIjoiIiwiaWF0IjoxNzA2NDc3NjUyLCJleHAiOjE3MDY0ODEyNTJ9.0piFI4HkfxTTIb-PwWJS_kI55vTIidFyeioN-dfb1Vo",
+//   username: "skillzo3",
+// };
